@@ -12,12 +12,10 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.lab_bam.Provider.LogCatEntryContentProvider;
+
 import com.example.lab_bam.R;
 
 public class MainActivity extends AppCompatActivity {
-
-    private LogCatEntryContentProvider logCatEntryContentProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +23,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.buttonSend);
         button.setOnClickListener(v -> onButtonClick());
-        logCatEntryContentProvider = new LogCatEntryContentProvider(getApplicationContext());
-        fetchAndLogEntires();
     }
 
     public void onButtonClick() {
 
         EditText editText = findViewById(R.id.editText);
         String textToPass = editText.getText().toString();
+
+        fetchAndLogEntires();
 
         Intent intent = new Intent(this, UserActivity.class);
         intent.putExtra(Intent.EXTRA_USER, textToPass);
@@ -43,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("Range")
     private void fetchAndLogEntires() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Cursor cursor = logCatEntryContentProvider
-                    .query(Uri.parse("content://com.example.lab_bam.Provider.LogCatEntryContentProvider/log-cat-entry"), null, null, null);
+            Cursor cursor = getContentResolver()
+                    .query(Uri.parse("content://com.example.lab_bam.provider/logcatentry"), null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     Log.i("ContentProvider",

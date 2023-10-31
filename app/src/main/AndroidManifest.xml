@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
 
+    <permission
+        android:name="com.example.lab_bam.provider.READ"
+        android:protectionLevel="normal" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,12 +17,11 @@
         android:theme="@style/Theme.LAB_BAM"
         tools:targetApi="31" >
         <provider
-            android:name="com.example.lab_bam.Provider.LogCatEntryContentProvider"
-            android:authorities="com.example.lab_bam.Provider.LogCatEntryContentProvider"
+            android:name="com.example.lab_bam.provider.LogCatEntryContentProvider"
+            android:authorities="com.example.lab_bam.provider"
             android:enabled="true"
             android:exported="true"
-            android:readPermission="com.example.lab_bam.Provider.READ"
-
+            android:readPermission="com.example.lab_bam.provider.READ"
             />
 
         <receiver

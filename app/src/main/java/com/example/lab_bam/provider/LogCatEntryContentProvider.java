@@ -1,18 +1,20 @@
-package com.example.lab_bam.Provider;
+package com.example.lab_bam.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.example.lab_bam.RoomDatabaseBuilder;
+import androidx.room.Room;
+
+import com.example.lab_bam.Repository.AppDb;
 
 public class LogCatEntryContentProvider extends ContentProvider {
 
-    static final String PROVIDER_NAME = "com.example.lab.provider";
-    static final int uriCode = 0;
+    static final String PROVIDER_NAME = "com.example.lab_bam.provider";
+    static final String URL = "content://" + PROVIDER_NAME + "/log-cat-entry";
+    static final int uriCode = 1;
     static final UriMatcher uriMatcher;
 
     static {
@@ -22,19 +24,12 @@ public class LogCatEntryContentProvider extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         // to access whole table
-        uriMatcher.addURI(PROVIDER_NAME, "users", uriCode);
+        uriMatcher.addURI(PROVIDER_NAME, "logcatentry", uriCode);
+
+        uriMatcher.addURI(PROVIDER_NAME, "logcatentry/*", uriCode);
 
     }
 
-    private final Context context;
-
-    public LogCatEntryContentProvider(Context context) {
-        this.context = context;
-    }
-
-    public LogCatEntryContentProvider() {
-        context = null;
-    }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -65,9 +60,12 @@ public class LogCatEntryContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         // TODO: Implement this to handle query requests from clients.
-        Cursor cursor = RoomDatabaseBuilder.buildInMemoryDb(context)
+        AppDb db = Room.databaseBuilder(getContext(), AppDb.class, "log-cat-entry")
+                .allowMainThreadQueries()
+                .build();
+        Cursor cursor = db
                 .query("SELECT * FROM logcatentry", null);
-        cursor.setNotificationUri(context.getContentResolver(), uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 

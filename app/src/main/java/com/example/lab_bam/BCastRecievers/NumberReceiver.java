@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.room.Room;
+
 import com.example.lab_bam.Entity.LogCatEntry;
-import com.example.lab_bam.RoomDatabaseBuilder;
+import com.example.lab_bam.Repository.AppDb;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +25,10 @@ public class NumberReceiver extends BroadcastReceiver {
     }
 
     private void buildAndSaveEntryToDb(String username, Integer number, Context context) {
-        RoomDatabaseBuilder
-                .buildInMemoryDb(context)
-                .logCatEntryRepo()
+        AppDb db = Room.databaseBuilder(context, AppDb.class, "log-cat-entry")
+                .allowMainThreadQueries()
+                .build();
+                db.logCatEntryRepo()
                 .insert(new LogCatEntry(UUID.randomUUID().toString(), username, number));
     }
 }

@@ -8,11 +8,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.example.lab_bam.ActionEnumValue;
 import com.example.lab_bam.BCastRecievers.NumberReceiver;
 import com.example.lab_bam.R;
-import com.example.lab_bam.RoomDatabaseBuilder;
+import com.example.lab_bam.Repository.AppDb;
 import com.example.lab_bam.Services.CounterService;
 
 public class UserActivity extends AppCompatActivity {
@@ -61,9 +62,10 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void onFetchButton() {
-        RoomDatabaseBuilder
-                .buildInMemoryDb(getApplicationContext())
-                .logCatEntryRepo()
+        AppDb db = Room.databaseBuilder(getApplicationContext(), AppDb.class, "log-cat-entry")
+                .allowMainThreadQueries()
+                .build();
+                db.logCatEntryRepo()
                 .getAll()
                 .forEach(el -> Log.i("Db entry: ", el.getUserName() + " " + el.getLastNumber()));
     }

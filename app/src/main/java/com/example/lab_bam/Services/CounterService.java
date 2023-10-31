@@ -50,7 +50,6 @@ public class CounterService extends Service{
 
     private Runnable countingTask() {
         return () -> {
-
             try {
                 int i = 0;
                 while (isLoggingOnOn) {

@@ -1,8 +1,5 @@
 package com.example.lab_bam.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -10,14 +7,13 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.lab_bam.ActionEnumValue;
 import com.example.lab_bam.BCastRecievers.NumberReceiver;
-import com.example.lab_bam.Entity.LogCatEntry;
-import com.example.lab_bam.Repository.AppDb;
-import com.example.lab_bam.Services.CounterService;
 import com.example.lab_bam.R;
-
-import java.util.UUID;
+import com.example.lab_bam.RoomDatabaseBuilder;
+import com.example.lab_bam.Services.CounterService;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -65,12 +61,11 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void onFetchButton() {
-        AppDb db = Room.databaseBuilder(getApplicationContext(), AppDb.class, "log-cat-entry")
-                .allowMainThreadQueries()
-                .build();
-        db.logCatEntryRepo().getAll().forEach(el -> {
-            Log.i("Db entry: ", el.getUserName() + " " + el.getLastNumber());
-        });
+        RoomDatabaseBuilder
+                .buildInMemoryDb(getApplicationContext())
+                .logCatEntryRepo()
+                .getAll()
+                .forEach(el -> Log.i("Db entry: ", el.getUserName() + " " + el.getLastNumber()));
     }
 
 }
